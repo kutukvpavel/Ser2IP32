@@ -460,7 +460,7 @@ protected:
         gOnChannel[channel] = this;
 
         // -- Assign the pin to this channel
-        rmt_set_pin(mRMT_channel, RMT_MODE_TX, mPin);
+        rmt_set_gpio(mRMT_channel, RMT_MODE_TX, mPin, false);
 
         if (FASTLED_RMT_BUILTIN_DRIVER) {
             // -- Use the built-in RMT driver to send all the data in one shot

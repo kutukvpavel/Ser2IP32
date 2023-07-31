@@ -1,4 +1,4 @@
-#include "tcpip_adapter.h"
+#include "esp_netif.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
 #include "esp_log.h"
@@ -30,7 +30,7 @@ void wifi::wifi_event_handler_softAP(void* arg, esp_event_base_t event_base, int
 
 void wifi::wifi_init_softap(const char * ssid, const char * password, uint8_t max_connections, uint8_t _channel)
 {
-    tcpip_adapter_init();
+    esp_netif_init();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -56,7 +56,7 @@ void wifi::wifi_init_softap(const char * ssid, const char * password, uint8_t ma
     }
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
     esp_wifi_set_ps (WIFI_PS_NONE);
     ESP_ERROR_CHECK(esp_wifi_start());
 
@@ -81,8 +81,8 @@ void wifi::wifi_event_handler_station(void* arg, esp_event_base_t event_base, in
         //ESP_LOGI(TAG,"connect to the AP fail");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        ESP_LOGI(TAG_WIFI, "got ip:%s",
-                 ip4addr_ntoa(&event->ip_info.ip));
+        ESP_LOGI(TAG_WIFI, "got ip:" IPSTR "\n",
+                 IP2STR(&event->ip_info.ip));
         //s_retry_num = 0;
         //xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
     }
@@ -92,7 +92,7 @@ void wifi::wifi_init_sta(const char * ssid, const char * password)
 {
     //s_wifi_event_group = xEventGroupCreate();
 
-    tcpip_adapter_init();
+    esp_netif_init();
 
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
@@ -117,7 +117,7 @@ void wifi::wifi_init_sta(const char * ssid, const char * password)
     strlcpy((char *)wifi_config.sta.password, password, sizeof(wifi_config.sta.password));
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     esp_wifi_set_ps (WIFI_PS_NONE);
     ESP_ERROR_CHECK(esp_wifi_start() );
 

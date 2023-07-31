@@ -3,9 +3,7 @@
 #include "freertos/event_groups.h"
 
 #include "asio.hpp"
-#include "protocol_examples_common.h"
 #include "esp_event.h"
-#include "tcpip_adapter.h"
 #include "nvs_flash.h"
 #include "esp_wifi.h"
 #include "esp_system.h"
@@ -25,6 +23,7 @@
 #include "commands.h"
 #include "constants.h"
 #include "storage_keys.h"
+#include "ethernet.h"
 
 const char *TAG = "SER2IP32";
 
@@ -117,9 +116,11 @@ static void initialize_console()
     setvbuf(stdin, NULL, _IONBF, 0);
 
     /* Minicom, screen, idf_monitor send CR when ENTER key is pressed */
-    esp_vfs_dev_uart_set_rx_line_endings(ESP_LINE_ENDINGS_CR);
+    esp_vfs_dev_uart_port_set_rx_line_endings(UART_NUM_0, ESP_LINE_ENDINGS_CR);
+    //esp_vfs_dev_uart_set_rx_line_endings(ESP_LINE_ENDINGS_CR);
     /* Move the caret to the beginning of the next line on '\n' */
-    esp_vfs_dev_uart_set_tx_line_endings(ESP_LINE_ENDINGS_CRLF);
+    esp_vfs_dev_uart_port_set_tx_line_endings(UART_NUM_0, ESP_LINE_ENDINGS_CRLF);
+    //esp_vfs_dev_uart_set_tx_line_endings(ESP_LINE_ENDINGS_CRLF);
 
     /* Configure UART. Note that REF_TICK is used so that the baud rate remains
      * correct while APB frequency is changing in light sleep mode.
@@ -377,6 +378,8 @@ extern "C" void app_main()
     ::vTaskDelay(100/portTICK_PERIOD_MS);
     // Start Wifi
     start_wifi(dis);
+    // Start ethernet
+    eth::init();
     // Start Uarts
     start_uarts(dis);
     
