@@ -99,13 +99,13 @@ void start_uarts()
       tcp_port = UART_DEFAULT_TCP_PORT[i];
 
     // TX Pin
-    gpio_num_t tx_pin;
+    int32_t tx_pin;
     sprintf(STORAGE_KEY, STORAGE_UART_TX_PIN, i);
     if (storage::read_int32(STORAGE_NAMESPACE, STORAGE_KEY, &tx_pin) != ESP_OK)
       tx_pin = UART_DEFAULT_TX_PIN[i];
 
     // RX Pin
-    gpio_num_t rx_pin;
+    int32_t rx_pin;
     sprintf(STORAGE_KEY, STORAGE_UART_RX_PIN, i);
     if (storage::read_int32(STORAGE_NAMESPACE, STORAGE_KEY, &rx_pin) != ESP_OK)
       rx_pin = UART_DEFAULT_RX_PIN[i];
@@ -123,19 +123,19 @@ void start_uarts()
       rx_buffer = UART_DEFAULT_BUFFER;
 
     // Data bits
-    uart_word_length_t data_bits;
+    int32_t data_bits;
     sprintf(STORAGE_KEY, STORAGE_UART_DATA_BITS, i);
     if (storage::read_int32(STORAGE_NAMESPACE, STORAGE_KEY, &data_bits) != ESP_OK)
       data_bits = UART_DEFAULT_DATA_BITS;
 
     // Parity
-    uart_parity_t parity;
+    int32_t parity;
     sprintf(STORAGE_KEY, STORAGE_UART_PARITY, i);
     if (storage::read_int32(STORAGE_NAMESPACE, STORAGE_KEY, &parity) != ESP_OK)
       parity = UART_DEFAULT_PARITY;
 
     // Stop bits
-    uart_stop_bits_t stop_bits;
+    int32_t stop_bits;
     sprintf(STORAGE_KEY, STORAGE_UART_STOP_BITS, i);
     if (storage::read_int32(STORAGE_NAMESPACE, STORAGE_KEY, &stop_bits) != ESP_OK)
       stop_bits = UART_DEFAULT_STOP_BITS;
@@ -146,7 +146,9 @@ void start_uarts()
     ESP_LOGI("START_UART", "Uart N: %i, Enabled: %i, Bauds: %i, TCP: %d, "
       "TXPin: %i, RXPin: %i, TXBuff: %d, RXBuff: %d, DataBits: %i, Parity: %i, StopBits: %i", 
       i, enabled, bauds, tcp_port, tx_pin, rx_pin, tx_buffer, rx_buffer, data_bits, parity, stop_bits);
-    configure_uart((uart_port_t)i, bauds, tx_pin, rx_pin, rts, cts, tx_buffer, rx_buffer, data_bits, (uart_parity_t)parity, stop_bits);
+    configure_uart(static_cast<uart_port_t>(i), bauds, static_cast<gpio_num_t>(tx_pin), static_cast<gpio_num_t>(rx_pin), rts, cts, 
+      tx_buffer, rx_buffer, 
+      static_cast<uart_word_length_t>(data_bits), static_cast<uart_parity_t>(parity), static_cast<uart_stop_bits_t>(stop_bits));
     ESP_LOGI("START_UART", "Server Uart N: %i", i);
     servers[i] = new uart_server(&io_context, tcp_port, (uart_port_t)i);
   }
