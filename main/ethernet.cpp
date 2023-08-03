@@ -61,6 +61,7 @@ namespace eth
     {
         // Initialize TCP/IP network interface (should be called only once in application)
         ESP_ERROR_CHECK(esp_netif_init());
+        ESP_ERROR_CHECK_WITHOUT_ABORT(esp_event_loop_create_default());
 
         //Enable RMII oscillator
         gpio_set_direction(GPIO_NUM_16, GPIO_MODE_OUTPUT);

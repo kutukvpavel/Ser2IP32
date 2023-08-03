@@ -2,10 +2,18 @@
   "C_Cpp.clang_format_style": "Visual Studio",
   "editor.formatOnSave": false,
   "[cpp]": {
-    "editor.quickSuggestions": true
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
   },
   "[c]": {
-    "editor.quickSuggestions": true
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
   },
   "C_Cpp.intelliSenseEngineFallback": "Enabled",
   "idf.portWin": "COM3",
@@ -91,5 +99,8 @@
     "xtree": "cpp",
     "xutility": "cpp",
     "*.ipp": "cpp"
-  }
+  },
+  "idf.adapterTargetName": "esp32",
+  "stm32-for-vscode.openOCDPath": false,
+  "stm32-for-vscode.armToolchainPath": false
 }

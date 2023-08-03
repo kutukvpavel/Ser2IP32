@@ -2,7 +2,6 @@
 #include "nvs_flash.h"
 #include "nvs.h"
 
-
 esp_err_t storage::read_int32 (const char* storage_name, const char *variable_name, int32_t *out_value)
 {
     nvs_handle_t my_handle;
@@ -94,4 +93,15 @@ void storage::format_nvs()
     // Clear NVS
     nvs_flash_erase();
     nvs_flash_init();
+}
+
+void storage::init_nvs()
+{
+  esp_err_t ret = nvs_flash_init();
+  if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+  {
+    ESP_ERROR_CHECK(nvs_flash_erase());
+    ret = nvs_flash_init();
+  }
+  ESP_ERROR_CHECK(ret);
 }

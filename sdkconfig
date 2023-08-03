@@ -1275,12 +1275,6 @@ CONFIG_WPA_MBEDTLS_CRYPTO=y
 # CONFIG_WPA_MBO_SUPPORT is not set
 # CONFIG_WPA_DPP_SUPPORT is not set
 # end of Supplicant
-
-#
-# Fast LED
-#
-# CONFIG_FAST_LED_TEST is not set
-# end of Fast LED
 # end of Component config
 
 #
